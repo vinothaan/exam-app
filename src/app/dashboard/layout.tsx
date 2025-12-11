@@ -34,9 +34,9 @@ export default function DashboardLayout({
                         <button
                             className="btn-icon mobile-only"
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            style={{ marginRight: '1rem', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}
+                            style={{ marginRight: '1rem', fontSize: '1.5rem' }}
                         >
-                            ☰
+                            <span style={{ marginTop: '-2px' }}>☰</span>
                         </button>
                         <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Dashboard</h2>
                     </div>
