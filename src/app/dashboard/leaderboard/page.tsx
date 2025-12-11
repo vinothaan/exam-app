@@ -67,10 +67,9 @@ export default async function LeaderboardPage() {
                                 </tr>
                             )}
                         </tbody>
-                    </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
-        </div >
     );
 }
