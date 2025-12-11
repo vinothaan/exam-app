@@ -34,7 +34,7 @@ export default function DashboardLayout({
                         <button
                             className="btn-icon mobile-only"
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            style={{ marginRight: '1rem', fontSize: '1.5rem' }}
+                            style={{ marginRight: '1rem', fontSize: '1.5rem', color: 'hsl(var(--primary-foreground))', borderColor: 'hsl(var(--border))' }}
                         >
                             <span style={{ marginTop: '-2px' }}>☰</span>
                         </button>
