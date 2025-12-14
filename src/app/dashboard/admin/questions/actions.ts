@@ -25,3 +25,22 @@ export async function addQuestion(formData: FormData) {
 
     return { success: true };
 }
+
+export async function bulkCreateQuestions(examId: number, questionsData: { text: string; options: string[]; correctAnswer: string }[]) {
+    const session = await auth();
+    if (session?.user?.role !== 'admin') throw new Error("Unauthorized");
+
+    if (!examId || !questionsData || questionsData.length === 0) {
+        throw new Error("Invalid data");
+    }
+
+    const values = questionsData.map(q => ({
+        examId,
+        text: q.text,
+        options: q.options,
+        correctAnswer: q.correctAnswer
+    }));
+
+    await db.insert(questions).values(values);
+    return { success: true, count: values.length };
+}

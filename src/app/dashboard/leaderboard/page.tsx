@@ -40,8 +40,8 @@ export default async function LeaderboardPage() {
                                     <td style={{ padding: '1rem' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                             <div style={{
-                                                width: '32px', height: '32px', borderRadius: '50%', background: 'hsl(var(--primary)/0.2)',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'hsl(var(--primary))'
+                                                width: '32px', height: '32px', borderRadius: '50%', background: 'hsl(var(--secondary)/0.2)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'hsl(var(--secondary))'
                                             }}>
                                                 {user.name?.[0]?.toUpperCase() || 'U'}
                                             </div>
@@ -54,7 +54,7 @@ export default async function LeaderboardPage() {
                                     <td style={{ padding: '1rem', textAlign: 'center', color: 'hsl(var(--muted-foreground))' }}>
                                         {user.examsTaken}
                                     </td>
-                                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold', color: 'hsl(var(--primary))' }}>
+                                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold', color: 'hsl(var(--secondary))' }}>
                                         {user.totalScore} pts
                                     </td>
                                 </tr>

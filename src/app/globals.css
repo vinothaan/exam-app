@@ -273,6 +273,34 @@ h3 {
   color: hsl(var(--secondary));
 }
 
+/* Mobile App Feel Improvements */
+@media (max-width: 768px) {
+  .nav-item {
+    padding: 1rem; /* Larger touch target */
+    font-size: 1rem;
+  }
+  
+  .card {
+     padding: 1rem; /* Save space on mobile */
+  }
+
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  /* Sticky Header Effect */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: hsl(var(--background));
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid hsl(var(--border));
+    margin-bottom: 1.5rem !important;
+  }
+}
+
 .nav-icon {
   margin-right: 0.75rem;
   width: 20px;
