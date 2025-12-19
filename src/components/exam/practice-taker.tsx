@@ -2,22 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { submitExam } from "@/app/dashboard/exams/actions";
+import { submitPractice } from "@/app/dashboard/study/practice/actions";
 
-// Define simpler Types for client
 type Question = {
     id: number;
     text: string;
-    options: string[];
+    options: string[] | any; // Handle jsonb
 };
 
-export default function ExamTaker({
+export default function PracticeTaker({
     initialQuestions,
-    examId,
+    topic,
     duration
 }: {
     initialQuestions: Question[],
-    examId: number,
+    topic: string,
     duration: number
 }) {
     const router = useRouter();
@@ -87,11 +86,13 @@ export default function ExamTaker({
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-            await submitExam(examId, answers);
-            router.push(`/dashboard/exams/${examId}/result`);
+            await submitPractice(topic, answers);
+            alert("Practice Session Completed!");
+            router.push(`/dashboard/study`); // Redirect to study page or results
+            // Note: Results page for practice is not yet built.
         } catch (error) {
             console.error(error);
-            alert("Failed to submit exam. Please try again.");
+            alert("Failed to submit practice. Please try again.");
             setIsSubmitting(false);
         }
     };
@@ -116,11 +117,14 @@ export default function ExamTaker({
 
     if (!currentQuestion) return <div>Loading...</div>;
 
+    // Parse options if they are strings in JSON
+    const currentOptions = Array.isArray(currentQuestion.options) ? currentQuestion.options : [];
+
     return (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: 'hsl(var(--card))', padding: '1rem', borderRadius: 'var(--radius)', border: '1px solid hsl(var(--border))' }}>
-                <h3 style={{ margin: 0 }}>Banking Exam</h3>
+                <h3 style={{ margin: 0 }}>{topic} Practice</h3>
                 <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: timeLeft < 300 ? 'red' : 'inherit', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>⏱</span> {formatTime(timeLeft)}
                 </div>
@@ -155,7 +159,7 @@ export default function ExamTaker({
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {currentQuestion.options.map((option, idx) => (
+                        {currentOptions.map((option: string, idx: number) => (
                             <label
                                 key={idx}
                                 style={{
@@ -205,7 +209,7 @@ export default function ExamTaker({
 
                         {currentQuestionIndex === initialQuestions.length - 1 ? (
                             <button className="btn btn-primary" onClick={handleSubmit} disabled={isSubmitting}>
-                                {isSubmitting ? 'Submitting...' : 'Submit Exam'}
+                                {isSubmitting ? 'Submitting...' : 'Submit Test'}
                             </button>
                         ) : (
                             <button
@@ -232,7 +236,7 @@ export default function ExamTaker({
                                     title={status}
                                     style={{
                                         aspectRatio: '1',
-                                        borderRadius: '50%', // Circle for mobile app feel
+                                        borderRadius: '50%',
                                         border: status === 'current' ? '2px solid hsl(var(--primary))' : '1px solid transparent',
                                         background: status === 'current' ? 'transparent' : getStatusColor(status),
                                         color: status === 'current' ? 'hsl(var(--foreground))' : 'white',
@@ -274,7 +278,7 @@ export default function ExamTaker({
                         grid-template-columns: 1fr !important;
                     }
                     .question-palette {
-                        order: -1; /* Show palette above question on mobile or make it collapsible */
+                        order: -1;
                         margin-bottom: 2rem;
                     }
                 }

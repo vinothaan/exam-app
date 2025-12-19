@@ -8,6 +8,7 @@ const navItems = [
     { label: "Overview", href: "/dashboard", icon: "📊" },
     { label: "Leaderboard", href: "/dashboard/leaderboard", icon: "🏆" },
     { label: "Exams", href: "/dashboard/exams", icon: "📝" },
+    { label: "Practice", href: "/dashboard/study/practice", icon: "🎯" }, // New Practice Link
     { label: "Study Materials", href: "/dashboard/study", icon: "📚" },
     { label: "Profile", href: "/dashboard/profile", icon: "👤" },
 ];

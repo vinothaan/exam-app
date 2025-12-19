@@ -77,6 +77,7 @@ export const questions = pgTable('questions', {
     text: text('text').notNull(),
     options: jsonb('options').notNull(), // Array of strings or objects
     correctAnswer: text('correct_answer').notNull(),
+    topic: text('topic').default("General").notNull(), // Added topic for practice mode
     createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -86,6 +87,15 @@ export const userProgress = pgTable('user_progress', {
     examId: integer('exam_id').references(() => exams.id),
     score: integer('score').notNull(),
     answers: jsonb('answers'), // Store user selected answers {questionId: option}
+    completedAt: timestamp('completed_at').defaultNow().notNull(),
+});
+
+export const practiceSessions = pgTable('practice_sessions', {
+    id: serial('id').primaryKey(),
+    userId: text('user_id').references(() => users.id),
+    topic: text('topic').notNull(),
+    score: integer('score').notNull(),
+    totalQuestions: integer('total_questions').notNull(),
     completedAt: timestamp('completed_at').defaultNow().notNull(),
 });
 
@@ -101,6 +111,11 @@ export const studyMaterials = pgTable('study_materials', {
 export const categories = pgTable('categories', {
     id: serial('id').primaryKey(),
     name: text('name').notNull().unique(),
+});
+
+export const siteStats = pgTable('site_stats', {
+    key: text('key').primaryKey(), // e.g., 'total_visitors'
+    value: integer('value').default(0).notNull(),
 });
 
 // Relations Definitions
