@@ -120,7 +120,7 @@ export default function ExamTaker({
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', background: 'hsl(var(--card))', padding: '1rem', borderRadius: 'var(--radius)', border: '1px solid hsl(var(--border))' }}>
-                <h3 style={{ margin: 0 }}>Banking Exam</h3>
+                <h3 style={{ margin: 0 }}>Tryvo Exam</h3>
                 <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: timeLeft < 300 ? 'red' : 'inherit', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>⏱</span> {formatTime(timeLeft)}
                 </div>

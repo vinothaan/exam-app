@@ -90,6 +90,18 @@ export default async function AdminDashboard() {
                         <Link href="/dashboard/admin/questions/bulk" className="btn" style={{ border: '1px solid hsl(var(--border))' }}>
                             📄 Bulk Upload (CSV)
                         </Link>
+
+                        <div style={{ marginTop: '1rem', borderTop: '1px solid hsl(var(--border))', paddingTop: '1rem' }}>
+                            <form action={async () => {
+                                "use server";
+                                const { resetLeaderboardAction } = await import('./actions');
+                                await resetLeaderboardAction();
+                            }}>
+                                <button className="btn" style={{ width: '100%', background: 'hsl(var(--destructive))', color: 'hsl(var(--destructive-foreground))' }}>
+                                    ⚠️ Reset Leaderboard
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ export default async function Home() {
     <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
       <main style={{ textAlign: 'center', marginBottom: '4rem' }}>
         <h1 className="text-gradient" style={{ fontSize: '3.5rem', marginBottom: '1.5rem', lineHeight: 1.1 }}>
-          Master Your Bank Exams<br />With Confidence
+          Master Your Exams with Tryvo
         </h1>
         <p style={{ fontSize: '1.25rem', color: 'hsl(var(--muted-foreground))', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
           Industry-standard preparation portal with real-time analytics,

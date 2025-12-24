@@ -69,10 +69,11 @@ async function seedData() {
     ];
 
     // Add more dummy questions
-    for (let i = 0; i < 50; i++) {
+    // Generate enough questions to allow for 50-question practice tests per topic
+    for (let i = 0; i < 300; i++) {
         const topic = topics[i % topics.length];
         sampleQuestions.push({
-            text: `Dummy Question ${i + 1} for ${topic}?`,
+            text: `Practice Question ${i + 1} for ${topic}: What represents this concept?`,
             options: ['Option A', 'Option B', 'Option C', 'Option D'],
             correctAnswer: 'Option A',
             topic: topic

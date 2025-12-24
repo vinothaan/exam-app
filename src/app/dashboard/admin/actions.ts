@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { exams, studyMaterials } from "@/db/schema";
+import { exams, studyMaterials, questions, userProgress } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
@@ -50,7 +50,17 @@ export async function deleteExamAction(id: number) {
     const session = await auth();
     if (session?.user?.role !== 'admin') throw new Error("Unauthorized");
 
+    // 1. Delete associated user progress
+    await db.delete(userProgress).where(eq(userProgress.examId, id));
+
+    // 2. Unlink questions (set examId to null) instead of deleting them, 
+    // so they remain available for practice/other exams.
+    // If you prefer strict deletion: await db.delete(questions).where(eq(questions.examId, id));
+    await db.update(questions).set({ examId: null }).where(eq(questions.examId, id));
+
+    // 3. Delete the exam
     await db.delete(exams).where(eq(exams.id, id));
+
     revalidatePath('/dashboard/exams');
     revalidatePath('/dashboard/admin');
 }
@@ -89,4 +99,17 @@ export async function deleteCategoryAction(id: number) {
     await db.delete(categories).where(eq(categories.id, id));
     revalidatePath('/dashboard/admin/categories');
     revalidatePath('/dashboard/admin/materials/add');
+}
+
+import { practiceSessions } from "@/db/schema";
+export async function resetLeaderboardAction() {
+    const session = await auth();
+    if (session?.user?.role !== 'admin') throw new Error("Unauthorized");
+
+    // Clear exam progress and practice sessions
+    await db.delete(userProgress);
+    await db.delete(practiceSessions);
+
+    revalidatePath('/dashboard/leaderboard');
+    return { success: true };
 }

@@ -23,7 +23,7 @@ export function Sidebar() {
     return (
         <aside className="sidebar">
             <div style={{ marginBottom: '2rem' }}>
-                <h2 className="text-gradient" style={{ fontSize: '1.5rem' }}>BankPrep</h2>
+                <h2 className="text-gradient" style={{ fontSize: '1.5rem' }}>Tryvo</h2>
             </div>
 
             <nav style={{ flex: 1 }}>

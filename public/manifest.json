@@ -1,7 +1,7 @@
 {
-    "name": "Bank Exam Prep PWA",
-    "short_name": "BankPrep",
-    "description": "Premium Bank Exam Preparation App",
+    "name": "Tryvo - Exam Prep",
+    "short_name": "Tryvo",
+    "description": "Premium Exam Preparation with Tryvo",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",

@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Bank Exam Prep - Premium Learning",
-  description: "Master your bank exams with industry-standard preparation tools.",
+  title: "Tryvo - Master Your Exams",
+  description: "Master your exams with industry-standard preparation tools.",
   manifest: "/manifest.json",
 };
 
