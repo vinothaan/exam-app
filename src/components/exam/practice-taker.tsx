@@ -86,10 +86,9 @@ export default function PracticeTaker({
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-            await submitPractice(topic, answers);
-            alert("Practice Session Completed!");
-            router.push(`/dashboard/study`); // Redirect to study page or results
-            // Note: Results page for practice is not yet built.
+            const sessionId = await submitPractice(topic, answers);
+            // alert("Practice Session Completed!");
+            router.push(`/dashboard/study/practice/${sessionId}/result`);
         } catch (error) {
             console.error(error);
             alert("Failed to submit practice. Please try again.");

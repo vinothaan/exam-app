@@ -6,10 +6,14 @@ import { bulkCreateQuestions } from "../actions";
 import { useRouter } from "next/navigation";
 
 type Exam = { id: number; title: string; category: string };
+type Category = { id: number; name: string };
 
-export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
+export default function BulkUploadForm({ exams, categories }: { exams: Exam[], categories: Category[] }) {
     const router = useRouter();
+    const [uploadType, setUploadType] = useState<"exam" | "topic">("exam");
     const [selectedExam, setSelectedExam] = useState<string>("");
+    const [selectedTopic, setSelectedTopic] = useState<string>("");
+
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -31,8 +35,17 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
     };
 
     const handleUpload = async () => {
-        if (!selectedExam || !file) {
-            setMessage("Please select an exam and a file.");
+        if (!file) {
+            setMessage("Please select a file.");
+            return;
+        }
+
+        if (uploadType === "exam" && !selectedExam) {
+            setMessage("Please select an exam.");
+            return;
+        }
+        if (uploadType === "topic" && !selectedTopic) {
+            setMessage("Please select a topic.");
             return;
         }
 
@@ -42,10 +55,8 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
         try {
             // Check file type
             if (file.name.endsWith(".csv")) {
-                // Simple CSV parse (fallback if user ignores Excel instruction or uses CSV)
                 const text = await file.text();
                 const rows = text.split("\n").map(r => r.split(","));
-                // Remove header usually
                 const dataRows = rows.slice(1).filter(r => r.length >= 6);
                 const questions = dataRows.map(row => ({
                     text: row[0],
@@ -55,12 +66,8 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
                 await processQuestions(questions);
 
             } else {
-                // Excel parse using read-excel-file
                 const rows = await readExcel(file);
-                // Assume Header: text, option1, option2, option3, option4, correctAnswer
-                // Skip header row
                 const dataRows = rows.slice(1);
-
                 const questions = dataRows.map((row: any[]) => ({
                     text: String(row[0]),
                     options: [String(row[1]), String(row[2]), String(row[3]), String(row[4])],
@@ -79,11 +86,21 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
 
     const processQuestions = async (questions: any[]) => {
         try {
-            const res = await bulkCreateQuestions(parseInt(selectedExam), questions);
+            let target: { examId?: number; topic: string };
+
+            if (uploadType === "exam") {
+                const exam = exams.find(e => e.id === parseInt(selectedExam));
+                if (!exam) throw new Error("Exam not found");
+                target = { examId: exam.id, topic: exam.category };
+            } else {
+                target = { topic: selectedTopic };
+            }
+
+            const res = await bulkCreateQuestions(target, questions);
+
             if (res.success) {
                 setMessage(`Successfully added ${res.count} questions!`);
                 setFile(null);
-                // Optional: router.refresh() or redirect
             }
         } catch (e) {
             setMessage("Failed to save questions.");
@@ -107,21 +124,65 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
                     </p>
                 </div>
 
+                {/* Upload Type Selection */}
+                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', borderBottom: '1px solid hsl(var(--border))', paddingBottom: '1rem' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', fontWeight: uploadType === 'exam' ? 'bold' : 'normal', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="uploadType"
+                            value="exam"
+                            checked={uploadType === 'exam'}
+                            onChange={() => setUploadType('exam')}
+                            style={{ marginRight: '0.5rem' }}
+                        />
+                        Upload to Exam
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', fontWeight: uploadType === 'topic' ? 'bold' : 'normal', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="uploadType"
+                            value="topic"
+                            checked={uploadType === 'topic'}
+                            onChange={() => setUploadType('topic')}
+                            style={{ marginRight: '0.5rem' }}
+                        />
+                        Upload to Topic (Practice Bank)
+                    </label>
+                </div>
+
+                {/* Select Exam or Topic */}
                 <div className="form-group">
-                    <label className="label">Select Exam</label>
-                    <select
-                        className="input"
-                        value={selectedExam}
-                        onChange={(e) => setSelectedExam(e.target.value)}
-                        required
-                    >
-                        <option value="">-- Choose an Exam --</option>
-                        {exams.map(exam => (
-                            <option key={exam.id} value={exam.id}>
-                                [{exam.category}] {exam.title}
-                            </option>
-                        ))}
-                    </select>
+                    <label className="label">
+                        {uploadType === 'exam' ? 'Select Exam' : 'Select Topic (Category)'}
+                    </label>
+
+                    {uploadType === 'exam' ? (
+                        <select
+                            className="input"
+                            value={selectedExam}
+                            onChange={(e) => setSelectedExam(e.target.value)}
+                        >
+                            <option value="">-- Choose an Exam --</option>
+                            {exams.map(exam => (
+                                <option key={exam.id} value={exam.id}>
+                                    [{exam.category}] {exam.title}
+                                </option>
+                            ))}
+                        </select>
+                    ) : (
+                        <select
+                            className="input"
+                            value={selectedTopic}
+                            onChange={(e) => setSelectedTopic(e.target.value)}
+                        >
+                            <option value="">-- Choose a Topic --</option>
+                            {categories.map(cat => (
+                                <option key={cat.id} value={cat.name}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -143,7 +204,7 @@ export default function BulkUploadForm({ exams }: { exams: Exam[] }) {
                 <button
                     className="btn btn-primary"
                     onClick={handleUpload}
-                    disabled={loading || !file || !selectedExam}
+                    disabled={loading || !file || (uploadType === 'exam' ? !selectedExam : !selectedTopic)}
                     style={{ width: '100%' }}
                 >
                     {loading ? 'Processing...' : 'Upload & Process'}

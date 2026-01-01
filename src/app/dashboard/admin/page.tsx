@@ -90,8 +90,15 @@ export default async function AdminDashboard() {
                         <Link href="/dashboard/admin/questions/bulk" className="btn" style={{ border: '1px solid hsl(var(--border))' }}>
                             📄 Bulk Upload (CSV)
                         </Link>
+                        <Link href="/dashboard/admin/questions" className="btn" style={{ border: '1px solid hsl(var(--border))' }}>
+                            🗑 Manage & Delete Questions
+                        </Link>
 
                         <div style={{ marginTop: '1rem', borderTop: '1px solid hsl(var(--border))', paddingTop: '1rem' }}>
+                            <Link href="/dashboard/admin/users" className="btn" style={{ width: '100%', marginBottom: '0.5rem', justifyContent: 'center', border: '1px solid hsl(var(--border))' }}>
+                                👥 View Registered Users
+                            </Link>
+
                             <form action={async () => {
                                 "use server";
                                 const { resetLeaderboardAction } = await import('./actions');
